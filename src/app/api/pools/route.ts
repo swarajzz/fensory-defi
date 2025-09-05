@@ -31,7 +31,6 @@ export async function GET(_req: NextRequest) {
         const category = CATEGORY_BY_ID[id];
         selected.push(toDashboardPool(found, id, category));
       } else {
-
         // placeholder if pool not found
         selected.push({
           id,
@@ -44,6 +43,7 @@ export async function GET(_req: NextRequest) {
           predictions: null,
           sigma: null,
           category: CATEGORY_BY_ID[id],
+          locked: CATEGORY_BY_ID[id] === "Yield Aggregator",
         });
       }
     }

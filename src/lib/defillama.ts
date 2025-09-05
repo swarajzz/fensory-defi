@@ -29,6 +29,7 @@ export type DashboardPool = {
   predictions: Predictions | null;
   sigma: number | null;
   category: "Lending" | "Liquid Staking" | "Yield Aggregator";
+  locked: boolean;
 };
 
 export function matchPoolById(item: LlamaPool, wanted: string): boolean {
@@ -55,5 +56,6 @@ export function toDashboardPool(
     predictions: item.predictions ?? null,
     sigma: item.sigma ?? null,
     category,
+    locked: category === "Yield Aggregator",
   };
 }

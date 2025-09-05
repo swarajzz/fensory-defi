@@ -4,6 +4,7 @@ import { Open_Sans, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Suspense } from "react";
+import { UnlockProvider } from "@/components/auth/unlock-provider";
 
 export const metadata: Metadata = {
   title: "DeFi Pools Dashboard",
@@ -41,7 +42,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <UnlockProvider>{children}</UnlockProvider>
           </ThemeProvider>
         </Suspense>
       </body>

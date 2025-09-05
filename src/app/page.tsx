@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import PoolsView from "@/components/pools/pools-view";
+import { UnlockDialog } from "@/components/auth/unlock-dialog";
+import { useUnlock } from "@/components/auth/unlock-provider";
 
 export default function HomePage() {
+  const { openUnlock, unlocked } = useUnlock();
+
   return (
     <main className="min-h-[calc(100vh-0px)]">
       <header className="border-b bg-card/50 backdrop-blur">
@@ -20,12 +24,21 @@ export default function HomePage() {
               <Link href="#pools">Pools</Link>
             </Button>
 
-            <Button variant="default">Connect Wallet</Button>
+            {unlocked ? (
+              <Button variant="secondary" disabled>
+                Connected
+              </Button>
+            ) : (
+              <Button variant="default" onClick={openUnlock}>
+                Connect Wallet
+              </Button>
+            )}
           </div>
         </div>
       </header>
 
       <PoolsView />
+      <UnlockDialog />
     </main>
   );
 }

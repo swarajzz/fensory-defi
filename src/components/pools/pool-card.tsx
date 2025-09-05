@@ -1,12 +1,18 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CategoryBadge } from "./pools-lengend";
+import { CategoryBadge } from "./pools-legend";
 import { formatPercent, formatUSD } from "@/lib/format";
 import type { DashboardPool } from "@/lib/defillama";
+import { useUnlock } from "@/components/auth/unlock-provider";
+import Link from "next/link";
+import { LockedOverlay } from "@/components/pools/locked-overlay";
 
 export function PoolCard({ pool }: { pool: DashboardPool }) {
-  return (
+  const { unlocked } = useUnlock();
+  const locked = pool.locked && !unlocked;
+
+  const content = (
     <Card className="relative overflow-hidden">
       <CardHeader className="space-y-2">
         <div className="flex items-center justify-between gap-3">
@@ -65,6 +71,17 @@ export function PoolCard({ pool }: { pool: DashboardPool }) {
           </div>
         </dl>
       </CardContent>
+      {locked && <LockedOverlay />}
     </Card>
+  );
+
+  return locked ? (
+    <div aria-disabled className="pointer-events-none opacity-90">
+      {content}
+    </div>
+  ) : (
+    <Link href={`/pools/${encodeURIComponent(pool.id)}`} prefetch>
+      {content}
+    </Link>
   );
 }
