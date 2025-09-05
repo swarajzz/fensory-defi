@@ -9,7 +9,7 @@ export function CategoryBadge({
 }) {
   const color =
     category === "Lending"
-      ? "bg-emerald-600 text-white"
+      ? "bg-pink-600 text-white"
       : category === "Liquid Staking"
       ? "bg-emerald-500 text-white"
       : "bg-muted-foreground text-white";

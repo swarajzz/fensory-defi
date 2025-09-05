@@ -33,8 +33,6 @@ function LoadingGrid() {
 export default function PoolsView() {
   const [category, setCategory] = useState<Category>("Lending");
   const { pools, isLoading, isError, refresh } = usePools();
-
-  console.log(pools)
   
   const filtered: DashboardPool[] = useMemo(() => {
     return pools.filter((p) => p.category === category);

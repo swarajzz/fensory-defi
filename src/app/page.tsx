@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import PoolsView from "@/components/pools/pools-view";
 import { UnlockDialog } from "@/components/auth/unlock-dialog";
 import { useUnlock } from "@/components/auth/unlock-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Link2 } from "lucide-react";
 
 export default function HomePage() {
   const { openUnlock, unlocked } = useUnlock();
@@ -34,6 +36,7 @@ export default function HomePage() {
               </Button>
             )}
           </div>
+          <ThemeToggle />
         </div>
       </header>
 
