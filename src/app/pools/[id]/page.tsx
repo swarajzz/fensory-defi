@@ -92,7 +92,7 @@ export default async function PoolPage({ params }: { params: { id: string } }) {
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Pool Info Card */}
-            <Card className="flex-1 bg-card/50 backdrop-blur-sm border-0 shadow-lg">
+            <Card className="flex-1 bg-card/50 backdrop-blur-sm border border-border/50 shadow-lg hover:border-border transition-colors duration-300">
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-2">

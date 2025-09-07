@@ -20,61 +20,63 @@ export function PoolCard({ pool }: { pool: DashboardPool }) {
     : null;
 
   const content = (
-    <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-0 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in hover-lift">
+    <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border border-border/50 shadow-sm hover:shadow-xl hover:border-border transition-all duration-300 hover:-translate-y-1 animate-fade-in hover-lift">
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
-      <CardHeader className="relative space-y-3 pb-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-1">
-            <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
+      <CardHeader className="relative space-y-4 pb-4">
+        <div className="flex items-start justify-between gap-4 min-h-[4rem]">
+          <div className="space-y-2 flex-1 min-w-0 pr-3">
+            <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300 leading-tight line-clamp-2">
               {pool.project}
             </CardTitle>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span>{pool.chain}</span>
+              <div className="h-2 w-2 rounded-full bg-emerald-500 flex-shrink-0" />
+              <span className="truncate">{pool.chain}</span>
               {pool.symbol && (
                 <>
                   <span>•</span>
-                  <span className="font-medium">{pool.symbol}</span>
+                  <span className="font-medium truncate">{pool.symbol}</span>
                 </>
               )}
             </div>
           </div>
-          <CategoryBadge category={pool.category} />
+          <div className="self-start min-w-fit">
+            <CategoryBadge category={pool.category} />
+          </div>
         </div>
       </CardHeader>
 
       <CardContent className="relative space-y-4">
         {/* Key Metrics Row */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Shield className="h-3 w-3" />
+              <Shield className="h-3 w-3 flex-shrink-0" />
               <span>TVL</span>
             </div>
-            <p className="text-lg font-bold text-foreground">
+            <p className="text-lg font-bold text-foreground break-words leading-tight">
               {formatUSD(pool.tvlUsd)}
             </p>
           </div>
           
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              {!apyTrend && <TrendingUp className="h-3 w-3" />}
+              {!apyTrend && <TrendingUp className="h-3 w-3 flex-shrink-0" />}
               <span>APY</span>
               {apyTrend && (
                 <div className={`flex items-center gap-0.5 ${
                   apyTrend === "up" ? "text-emerald-600" : "text-red-600"
                 }`}>
                   {apyTrend === "up" ? (
-                    <TrendingUp className="h-3 w-3" />
+                    <TrendingUp className="h-3 w-3 flex-shrink-0" />
                   ) : (
-                    <TrendingDown className="h-3 w-3" />
+                    <TrendingDown className="h-3 w-3 flex-shrink-0" />
                   )}
                 </div>
               )}
             </div>
-            <p className="text-lg font-bold text-emerald-600">
+            <p className="text-lg font-bold text-emerald-600 break-words leading-tight">
               {formatPercent(pool.apy)}
             </p>
           </div>
@@ -83,20 +85,20 @@ export function PoolCard({ pool }: { pool: DashboardPool }) {
         {/* Secondary Metrics */}
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="space-y-1">
+            <div className="space-y-1 min-w-0">
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <BarChart3 className="h-3 w-3" />
+                <BarChart3 className="h-3 w-3 flex-shrink-0" />
                 <span>30d Avg</span>
               </div>
-              <p className="font-medium">{formatPercent(pool.apyMean30d)}</p>
+              <p className="font-medium break-words leading-tight">{formatPercent(pool.apyMean30d)}</p>
             </div>
             
-            <div className="space-y-1">
+            <div className="space-y-1 min-w-0">
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Zap className="h-3 w-3" />
+                <Zap className="h-3 w-3 flex-shrink-0" />
                 <span>Risk</span>
               </div>
-              <p className="font-medium">
+              <p className="font-medium break-words leading-tight">
                 {typeof pool.sigma === "number" ? pool.sigma.toFixed(2) : "—"}
               </p>
             </div>

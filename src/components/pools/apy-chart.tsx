@@ -20,6 +20,8 @@ import { useTheme } from "next-themes";
 export function APYChart({ poolId }: { poolId: string }) {
   const { points, isLoading, isError } = usePoolChart(poolId);
   const { theme } = useTheme();
+  
+  const currentTheme = theme || "light";
 
   const data = useMemo(
     () =>
@@ -50,7 +52,7 @@ export function APYChart({ poolId }: { poolId: string }) {
 
   if (isLoading) {
     return (
-      <Card className="mt-6">
+      <Card className="mt-6 border border-border/50">
         <CardHeader>
           <Skeleton className="h-6 w-48" />
         </CardHeader>
@@ -74,7 +76,7 @@ export function APYChart({ poolId }: { poolId: string }) {
 
   if (!data.length) {
     return (
-      <Card className="mt-6">
+      <Card className="mt-6 border border-border/50">
         <CardHeader>
           <CardTitle>APY History (12 months)</CardTitle>
         </CardHeader>
@@ -90,7 +92,7 @@ export function APYChart({ poolId }: { poolId: string }) {
   }
 
   return (
-    <Card className="mt-8 bg-card/50 backdrop-blur-sm border-0 shadow-lg">
+    <Card className="mt-8 bg-card/50 backdrop-blur-sm border border-border/50 shadow-lg hover:border-border transition-colors duration-300">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
@@ -137,18 +139,18 @@ export function APYChart({ poolId }: { poolId: string }) {
                 <linearGradient id="apyGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="0%"
-                    stopColor="hsl(var(--primary))"
-                    stopOpacity={0.4}
+                    stopColor={currentTheme === "dark" ? "#9333ea" : "#6366f1"}
+                    stopOpacity={0.6}
                   />
                   <stop
                     offset="50%"
-                    stopColor="hsl(var(--primary))"
-                    stopOpacity={0.2}
+                    stopColor={currentTheme === "dark" ? "#9333ea" : "#6366f1"}
+                    stopOpacity={0.3}
                   />
                   <stop
                     offset="100%"
-                    stopColor="hsl(var(--primary))"
-                    stopOpacity={0.05}
+                    stopColor={currentTheme === "dark" ? "#9333ea" : "#6366f1"}
+                    stopOpacity={0.1}
                   />
                 </linearGradient>
                 <filter id="glow">
@@ -161,22 +163,22 @@ export function APYChart({ poolId }: { poolId: string }) {
               </defs>
               <CartesianGrid
                 strokeDasharray="2 4"
-                stroke={theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)"}
-                strokeOpacity={0.3}
+                stroke={currentTheme === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)"}
+                strokeOpacity={currentTheme === "dark" ? 0.4 : 0.3}
               />
               <XAxis
                 dataKey="date"
                 tick={{ 
                   fontSize: 12, 
-                  fill: theme === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)",
+                  fill: currentTheme === "dark" ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.6)",
                   fontWeight: 500
                 }}
                 axisLine={{ 
-                  stroke: theme === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.2)", 
+                  stroke: currentTheme === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)", 
                   strokeWidth: 1 
                 }}
                 tickLine={{ 
-                  stroke: theme === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.2)" 
+                  stroke: currentTheme === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)" 
                 }}
                 tickMargin={12}
                 interval="preserveStartEnd"
@@ -185,35 +187,35 @@ export function APYChart({ poolId }: { poolId: string }) {
                 tickFormatter={(v) => `${v}%`}
                 tick={{ 
                   fontSize: 12, 
-                  fill: theme === "dark" ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.6)",
+                  fill: currentTheme === "dark" ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.6)",
                   fontWeight: 500
                 }}
                 axisLine={{ 
-                  stroke: theme === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.2)", 
+                  stroke: currentTheme === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)", 
                   strokeWidth: 1 
                 }}
                 tickLine={{ 
-                  stroke: theme === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.2)" 
+                  stroke: currentTheme === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)" 
                 }}
                 tickMargin={12}
                 domain={["dataMin - 0.5", "dataMax + 0.5"]}
               />
               <Tooltip
                 contentStyle={{
-                  background: theme === "dark" ? "rgba(18, 18, 18, 0.95)" : "rgba(255, 255, 255, 0.95)",
-                  borderColor: theme === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)",
-                  color: theme === "dark" ? "rgba(255, 255, 255, 0.9)" : "rgba(0, 0, 0, 0.9)",
+                  background: currentTheme === "dark" ? "rgba(12, 12, 12, 0.98)" : "rgba(255, 255, 255, 0.98)",
+                  borderColor: currentTheme === "dark" ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.1)",
+                  color: currentTheme === "dark" ? "rgba(255, 255, 255, 0.95)" : "rgba(0, 0, 0, 0.9)",
                   borderRadius: 16,
-                  boxShadow: theme === "dark" 
-                    ? "0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2)"
+                  boxShadow: currentTheme === "dark" 
+                    ? "0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.3)"
                     : "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                  border: `1px solid ${theme === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.1)"}`,
-                  backdropFilter: "blur(8px)",
+                  border: `1px solid ${currentTheme === "dark" ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.1)"}`,
+                  backdropFilter: "blur(12px)",
                 }}
                 formatter={(value: any) => [`${value}%`, "APY"]}
                 labelFormatter={(label) => `Date: ${label}`}
                 cursor={{
-                  stroke: theme === "dark" ? "rgba(147, 51, 234, 0.8)" : "rgba(99, 102, 241, 0.8)",
+                  stroke: currentTheme === "dark" ? "rgba(147, 51, 234, 0.8)" : "rgba(99, 102, 241, 0.8)",
                   strokeWidth: 2,
                   strokeDasharray: "8 4",
                   strokeOpacity: 0.8,
@@ -222,19 +224,19 @@ export function APYChart({ poolId }: { poolId: string }) {
               <Area
                 type="monotone"
                 dataKey="apy"
-                stroke="hsl(var(--primary))"
+                stroke={currentTheme === "dark" ? "#9333ea" : "#6366f1"}
                 strokeWidth={3}
                 fill="url(#apyGradient)"
                 dot={{
                   r: 4,
-                  stroke: "hsl(var(--primary))",
-                  fill: "hsl(var(--background))",
+                  stroke: currentTheme === "dark" ? "#9333ea" : "#6366f1",
+                  fill: currentTheme === "dark" ? "#0c0c0c" : "#ffffff",
                   strokeWidth: 2,
                 }}
                 activeDot={{
                   r: 6,
-                  stroke: "hsl(var(--primary))",
-                  fill: "hsl(var(--primary))",
+                  stroke: currentTheme === "dark" ? "#9333ea" : "#6366f1",
+                  fill: currentTheme === "dark" ? "#9333ea" : "#6366f1",
                   strokeWidth: 2,
                 }}
                 connectNulls

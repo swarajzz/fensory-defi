@@ -14,5 +14,5 @@ export function CategoryBadge({
       ? "bg-teal-600 text-white"
       : "bg-cyan-500 text-white";
     
-  return <Badge className={`${color} uppercase`}>{category}</Badge>;
+  return <Badge className={`${color} uppercase text-xs font-medium whitespace-nowrap px-2 py-1`}>{category}</Badge>;
 }
