@@ -24,7 +24,6 @@ export async function GET(
     }
     const json = await res.json();
 
-    console.log(json)
     const points = Array.isArray(json)
       ? json
       : Array.isArray(json?.data)

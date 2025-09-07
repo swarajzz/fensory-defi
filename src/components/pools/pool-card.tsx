@@ -1,76 +1,127 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { CategoryBadge } from "./pools-legend";
 import { formatPercent, formatUSD } from "@/lib/format";
 import type { DashboardPool } from "@/lib/defillama";
 import { useUnlock } from "@/components/auth/unlock-provider";
 import Link from "next/link";
 import { LockedOverlay } from "@/components/pools/locked-overlay";
+import { TrendingUp, TrendingDown, Shield, Zap, BarChart3, ArrowUpRight } from "lucide-react";
 
 export function PoolCard({ pool }: { pool: DashboardPool }) {
   const { unlocked } = useUnlock();
   const locked = pool.locked && !unlocked;
 
+  // Calculate APY trend
+  const apyTrend = pool.apy && pool.apyMean30d 
+    ? pool.apy > pool.apyMean30d ? "up" : "down"
+    : null;
+
   const content = (
-    <Card className="relative overflow-hidden">
-      <CardHeader className="space-y-2">
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle className="text-pretty">{pool.project}</CardTitle>
+    <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-0 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in hover-lift">
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      <CardHeader className="relative space-y-3 pb-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1">
+            <CardTitle className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
+              {pool.project}
+            </CardTitle>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="h-2 w-2 rounded-full bg-emerald-500" />
+              <span>{pool.chain}</span>
+              {pool.symbol && (
+                <>
+                  <span>•</span>
+                  <span className="font-medium">{pool.symbol}</span>
+                </>
+              )}
+            </div>
+          </div>
           <CategoryBadge category={pool.category} />
         </div>
-        <p className="text-sm text-muted-foreground">
-          {pool.chain} • {pool.symbol || "—"}
-        </p>
       </CardHeader>
-      <CardContent>
-        <dl className="grid grid-cols-2 gap-3 text-sm">
-          <div>
-            <dt className="text-muted-foreground">TVL</dt>
-            <dd className="font-medium">{formatUSD(pool.tvlUsd)}</dd>
+
+      <CardContent className="relative space-y-4">
+        {/* Key Metrics Row */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Shield className="h-3 w-3" />
+              <span>TVL</span>
+            </div>
+            <p className="text-lg font-bold text-foreground">
+              {formatUSD(pool.tvlUsd)}
+            </p>
           </div>
-          <div>
-            <dt className="text-muted-foreground">APY</dt>
-            <dd className="font-medium">{formatPercent(pool.apy)}</dd>
+          
+          <div className="space-y-1">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              {!apyTrend && <TrendingUp className="h-3 w-3" />}
+              <span>APY</span>
+              {apyTrend && (
+                <div className={`flex items-center gap-0.5 ${
+                  apyTrend === "up" ? "text-emerald-600" : "text-red-600"
+                }`}>
+                  {apyTrend === "up" ? (
+                    <TrendingUp className="h-3 w-3" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3" />
+                  )}
+                </div>
+              )}
+            </div>
+            <p className="text-lg font-bold text-emerald-600">
+              {formatPercent(pool.apy)}
+            </p>
           </div>
-          <div>
-            <dt className="text-muted-foreground">APY (30d mean)</dt>
-            <dd className="font-medium">{formatPercent(pool.apyMean30d)}</dd>
+        </div>
+
+        {/* Secondary Metrics */}
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="space-y-1">
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <BarChart3 className="h-3 w-3" />
+                <span>30d Avg</span>
+              </div>
+              <p className="font-medium">{formatPercent(pool.apyMean30d)}</p>
+            </div>
+            
+            <div className="space-y-1">
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Zap className="h-3 w-3" />
+                <span>Risk</span>
+              </div>
+              <p className="font-medium">
+                {typeof pool.sigma === "number" ? pool.sigma.toFixed(2) : "—"}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <dt className="text-muted-foreground">Prediction Class</dt>
-            <dd className="font-medium">
-              {pool.predictions?.predictedClass ?? "—"}
-            </dd>
-          </div>
+          {/* Prediction Badge */}
+          {pool.predictions?.predictedClass && (
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">Prediction</span>
+              <Badge 
+                variant={pool.predictions.predictedClass === "stable" ? "default" : "secondary"}
+                className="text-xs"
+              >
+                {pool.predictions.predictedClass}
+              </Badge>
+            </div>
+          )}
+        </div>
 
-          <div>
-            <dt className="text-muted-foreground">Predicted Probability</dt>
-            <dd className="font-medium">
-              {typeof pool.predictions?.predictedProbability === "number"
-                ? formatPercent(pool.predictions.predictedProbability)
-                : "—"}
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-muted-foreground">Binned Confidence</dt>
-            <dd className="font-medium">
-              {typeof pool.predictions?.binnedConfidence === "number"
-                ? pool.predictions.binnedConfidence
-                : "—"}
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-muted-foreground">Sigma</dt>
-            <dd className="font-medium">
-              {typeof pool.sigma === "number" ? pool.sigma.toFixed(2) : "—"}
-            </dd>
-          </div>
-        </dl>
+        {/* Hover indicator */}
+        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <ArrowUpRight className="h-4 w-4 text-primary" />
+        </div>
       </CardContent>
+
       {locked && <LockedOverlay />}
     </Card>
   );
@@ -80,7 +131,7 @@ export function PoolCard({ pool }: { pool: DashboardPool }) {
       {content}
     </div>
   ) : (
-    <Link href={`/pools/${encodeURIComponent(pool.id)}`} prefetch>
+    <Link href={`/pools/${encodeURIComponent(pool.id)}`} prefetch className="block">
       {content}
     </Link>
   );

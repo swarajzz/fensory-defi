@@ -34,7 +34,6 @@ export function usePoolChart(id?: string) {
     revalidateOnFocus: false,
     dedupingInterval: 60_000,
   });
-  console.log(data)
   return {
     points: data?.data ?? [],
     isLoading,

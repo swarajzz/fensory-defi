@@ -9,9 +9,10 @@ export function CategoryBadge({
 }) {
   const color =
     category === "Lending"
-      ? "bg-pink-600 text-white"
+      ? "bg-rose-600 text-white"
       : category === "Liquid Staking"
-      ? "bg-emerald-500 text-white"
-      : "bg-muted-foreground text-white";
-  return <Badge className={color}>{category}</Badge>;
+      ? "bg-teal-600 text-white"
+      : "bg-cyan-500 text-white";
+    
+  return <Badge className={`${color} uppercase`}>{category}</Badge>;
 }
