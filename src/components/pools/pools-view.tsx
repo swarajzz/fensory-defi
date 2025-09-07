@@ -94,21 +94,23 @@ export default function PoolsView() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-muted-foreground">
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full lg:w-auto">
+            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
               Filter by:
             </span>
-            <CategoryFilter
-              value={category}
-              onChange={setCategory}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-            />
+            <div className="w-full sm:w-auto">
+              <CategoryFilter
+                value={category}
+                onChange={setCategory}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+              />
+            </div>
           </div>
 
           {/* Results count */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full lg:w-auto justify-start lg:justify-end">
             <Badge variant="secondary" className="text-xs">
               {filtered.length} pools
             </Badge>

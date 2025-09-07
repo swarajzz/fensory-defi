@@ -6,12 +6,31 @@ import PoolsView from "@/components/pools/pools-view";
 import { UnlockDialog } from "@/components/auth/unlock-dialog";
 import { useUnlock } from "@/components/auth/unlock-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { TrendingUp, Wallet, Shield, Zap, ArrowRight } from "lucide-react";
+import { TrendingUp, Wallet, Shield, Zap, ArrowRight, X } from "lucide-react";
 import { usePools } from "@/hooks/use-pools";
+import { useState, useEffect, useRef } from "react";
 
 export default function HomePage() {
   const { openUnlock, unlocked } = useUnlock();
   const { pools } = usePools();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    }
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   // Calculate total TVL and average APY
   const totalTVL = pools.reduce((sum, pool) => sum + (pool.tvlUsd || 0), 0);
@@ -57,20 +76,29 @@ export default function HomePage() {
             </nav>
 
             {/* Mobile Menu Button */}
-            <Button variant="ghost" size="sm" className="md:hidden">
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
             </Button>
 
             <div className="flex items-center gap-3">
@@ -94,6 +122,28 @@ export default function HomePage() {
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div ref={mobileMenuRef} className="md:hidden border-b bg-background/95 backdrop-blur-xl">
+          <div className="mx-auto max-w-7xl px-4 py-4">
+            <nav className="flex flex-col gap-2">
+              <Button variant="ghost" asChild className="justify-start text-sm font-medium">
+                <Link href="#pools" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
+                  <TrendingUp className="h-4 w-4" />
+                  Pools
+                </Link>
+              </Button>
+              <Button variant="ghost" className="justify-start text-sm font-medium">
+                Analytics
+              </Button>
+              <Button variant="ghost" className="justify-start text-sm font-medium">
+                Docs
+              </Button>
+            </nav>
+          </div>
+        </div>
+      )}
 
       {/* Hero */}
       <section className="relative overflow-hidden">

@@ -30,7 +30,7 @@ export function CategoryFilter({
   onSearchChange?: (query: string) => void;
 }) {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center w-full">
       {/* Search Input */}
       {onSearchChange && (
         <div className="relative flex-1 max-w-md">
