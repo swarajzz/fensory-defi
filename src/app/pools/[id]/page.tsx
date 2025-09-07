@@ -20,20 +20,8 @@ import {
   AlertTriangle,
   CheckCircle,
 } from "lucide-react";
+import { DashboardPool } from "@/lib/defillama";
 
-type DashboardPool = {
-  id: string;
-  project: string;
-  chain: string;
-  symbol: string;
-  tvlUsd: number;
-  apy: number | null;
-  apyMean30d: number | null;
-  prediction: number | null;
-  sigma: number | null;
-  category: "Lending" | "Liquid Staking" | "Yield Aggregator";
-  locked: boolean;
-};
 
 async function getPool(id: string): Promise<DashboardPool | null> {
   const res = await fetch(
@@ -195,10 +183,10 @@ export default async function PoolPage({
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Clock className="h-4 w-4" />
-                        <span>Predicted Yield</span>
+                        <span>Binned Confidence</span>
                       </div>
                       <p className="text-xl font-semibold">
-                        {formatPercent(pool.prediction)}
+                        {pool.predictions?.binnedConfidence}
                       </p>
                     </div>
                   </div>
