@@ -6,8 +6,6 @@ import { matchPoolById, toDashboardPool } from "@/lib/defillama";
 export async function GET(_req: NextRequest) {
   try {
     const res = await fetch("https://yields.llama.fi/pools", {
-      // cache revalidation to reduce rate and improve perf
-      // next: { revalidate: 300 },
       headers: { accept: "application/json" },
     });
     if (!res.ok) {

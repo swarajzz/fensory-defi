@@ -6,19 +6,19 @@ import { Badge } from "@/components/ui/badge";
 import { CategoryBadge } from "@/components/pools/pools-legend";
 import { APYChart } from "@/components/pools/apy-chart";
 import { formatPercent, formatUSD } from "@/lib/format";
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Shield, 
-  Zap, 
-  BarChart3, 
+import {
+  TrendingUp,
+  TrendingDown,
+  Shield,
+  Zap,
+  BarChart3,
   ArrowLeft,
   ExternalLink,
   Clock,
   DollarSign,
   Activity,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 
 type DashboardPool = {
@@ -37,7 +37,11 @@ type DashboardPool = {
 
 async function getPool(id: string): Promise<DashboardPool | null> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_VERCEL_URL ? "https://" + process.env.NEXT_PUBLIC_VERCEL_URL : "http://localhost:3000"}/api/pools`,
+    `${
+      process.env.NEXT_PUBLIC_VERCEL_URL
+        ? "https://" + process.env.NEXT_PUBLIC_VERCEL_URL
+        : "http://localhost:3000"
+    }/api/pools`,
     {
       next: { revalidate: 300 },
     }
@@ -49,22 +53,33 @@ async function getPool(id: string): Promise<DashboardPool | null> {
   return found ?? null;
 }
 
-export default async function PoolPage({ params }: { params: { id: string } }) {
-  const pool = await getPool(params.id);
+export default async function PoolPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const pool = await getPool(id);
   if (!pool) {
     notFound();
   }
 
   // Calculate APY trend
-  const apyTrend = pool.apy && pool.apyMean30d 
-    ? pool.apy > pool.apyMean30d ? "up" : "down"
-    : null;
+  const apyTrend =
+    pool.apy && pool.apyMean30d
+      ? pool.apy > pool.apyMean30d
+        ? "up"
+        : "down"
+      : null;
 
   // Risk assessment based on sigma
   const getRiskLevel = (sigma: number | null) => {
-    if (!sigma) return { level: "Unknown", color: "secondary", icon: AlertTriangle };
-    if (sigma < 0.1) return { level: "Low", color: "default", icon: CheckCircle };
-    if (sigma < 0.3) return { level: "Medium", color: "secondary", icon: Activity };
+    if (!sigma)
+      return { level: "Unknown", color: "secondary", icon: AlertTriangle };
+    if (sigma < 0.1)
+      return { level: "Low", color: "default", icon: CheckCircle };
+    if (sigma < 0.3)
+      return { level: "Medium", color: "secondary", icon: Activity };
     return { level: "High", color: "destructive", icon: AlertTriangle };
   };
 
@@ -103,7 +118,9 @@ export default async function PoolPage({ params }: { params: { id: string } }) {
                         </span>
                       </div>
                       <div>
-                        <CardTitle className="text-2xl font-bold">{pool.project}</CardTitle>
+                        <CardTitle className="text-2xl font-bold">
+                          {pool.project}
+                        </CardTitle>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <div className="h-2 w-2 rounded-full bg-emerald-500" />
                           <span>{pool.chain}</span>
@@ -132,17 +149,23 @@ export default async function PoolPage({ params }: { params: { id: string } }) {
                         <DollarSign className="h-4 w-4" />
                         <span>Total Value Locked</span>
                       </div>
-                      <p className="text-2xl font-bold">{formatUSD(pool.tvlUsd)}</p>
+                      <p className="text-2xl font-bold">
+                        {formatUSD(pool.tvlUsd)}
+                      </p>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <TrendingUp className="h-4 w-4" />
                         <span>Current APY</span>
                         {apyTrend && (
-                          <div className={`flex items-center gap-1 ${
-                            apyTrend === "up" ? "text-emerald-600" : "text-red-600"
-                          }`}>
+                          <div
+                            className={`flex items-center gap-1 ${
+                              apyTrend === "up"
+                                ? "text-emerald-600"
+                                : "text-red-600"
+                            }`}
+                          >
                             {apyTrend === "up" ? (
                               <TrendingUp className="h-3 w-3" />
                             ) : (
@@ -164,15 +187,19 @@ export default async function PoolPage({ params }: { params: { id: string } }) {
                         <BarChart3 className="h-4 w-4" />
                         <span>30-Day Average</span>
                       </div>
-                      <p className="text-xl font-semibold">{formatPercent(pool.apyMean30d)}</p>
+                      <p className="text-xl font-semibold">
+                        {formatPercent(pool.apyMean30d)}
+                      </p>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Clock className="h-4 w-4" />
                         <span>Predicted Yield</span>
                       </div>
-                      <p className="text-xl font-semibold">{formatPercent(pool.prediction)}</p>
+                      <p className="text-xl font-semibold">
+                        {formatPercent(pool.prediction)}
+                      </p>
                     </div>
                   </div>
 
@@ -188,14 +215,16 @@ export default async function PoolPage({ params }: { params: { id: string } }) {
                         {risk.level}
                       </Badge>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Zap className="h-4 w-4" />
                         <span>Volatility (σ)</span>
                       </div>
                       <p className="text-xl font-semibold">
-                        {typeof pool.sigma === "number" ? pool.sigma.toFixed(3) : "—"}
+                        {typeof pool.sigma === "number"
+                          ? pool.sigma.toFixed(3)
+                          : "—"}
                       </p>
                     </div>
                   </div>
